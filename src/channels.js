@@ -1,3 +1,6 @@
+var l10n_file = __dirname + '/../l10n/commands/auction.yml';
+var l10n = require('../src/l10n')(l10n_file);
+var CommandUtil = require('../src/command_util').CommandUtil;
 exports.Channels = {
 	say: {
 		name: 'say',
@@ -43,5 +46,36 @@ exports.Channels = {
 			}
 			players.eachIf(function(p){ return p.getName() === player || p.getName() === target; }, function (p) { p.prompt(); });
 		}
-	}
+	},
+
+	auction: {
+		name: 'auction',
+		description: 'Sell items',
+		use: function (args, player, players)
+		{
+			args = args.split(" ");
+			if (args.length < 2){
+				player.sayL10n(l10n,"AUCTION_ARGS");
+				return;
+			}
+			else {
+				var item = args[0];
+				var price = args[1];
+				if (isNaN(args[0]) && !isNaN(args[1])){
+
+				}
+				else if (isNaN(args[1]) && !isNaN(args[0])){
+					item = args[1];
+					price = args[0];
+				}
+				else {
+					player.sayL10n(l10n,"AUCTION_FAIL", item, price);
+					return;
+				}
+			}
+			item = CommandUtil.findItemInInventory(item, player, true);
+			players.broadcastL10n(l10n, "AUCTION", player.getName(), item.getShortDesc(player.getLocale()), price);
+			players.eachExcept(player, function (p) { p.prompt(); });
+		}
+	},
 };

@@ -110,17 +110,19 @@ var Player = function(socket) {
 	self.setCooldown = function (name)
 	{
 		var skill = Skills[self.getAttribute("class")][name];
-		self.addAffect('cooldown_'+name, {
-			duration: skill.cooldown,
-			deactivate: function () {
-				if (skill.offCooldown) {
-					skill.offCooldown(self);
+		if (skill.cooldown){
+			self.addAffect('cooldown_'+name, {
+				duration: skill.cooldown,
+				deactivate: function () {
+					if (skill.offCooldown) {
+						skill.offCooldown(self);
+					}
+					else {
+						self.sayL10n(l10n, 'COOLDOWN_END', skill.name);
+					}
 				}
-				else {
-					self.sayL10n(l10n, 'COOLDOWN_END', skill.name);
-				}
-			}
-		});
+			});
+		}
 	};
 
 	/**

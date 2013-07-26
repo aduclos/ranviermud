@@ -8,6 +8,8 @@ var Data    = require('./data').Data,
 
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir         = __dirname + '/../l10n/scripts/player/';
+var l10n_file 		 = __dirname + '/../l10n/scripts/player/player.js.yml';
+var l10n 			 = require('./l10n')(l10n_file);
 
 var Player = function(socket) {
 	var self = this;
@@ -69,6 +71,57 @@ var Player = function(socket) {
 	self.setAttribute    = function (attr, val) { self.attributes[attr] = val; };
 	self.addSkill        = function (name, skill) { self.skills[name] = skill; };
 	/**#@-*/
+
+	/**
+	 * Is skill usable in combat?
+	 * @param string aff
+	 * @return Array|Object
+	 */
+	self.notCombatUsable = function (name)
+	{
+		var skill = Skills[self.getAttribute("class")][name];
+        return skill.notCombatUsable;
+	};
+
+	/**
+	 * Get a cooldown
+	 * @param string aff
+	 * @return Array|Object
+	 */
+	self.getCooldown = function (name)
+	{
+		var skill = Skills[self.getAttribute("class")][name];
+		if (self.getAffects('cooldown_'+name)) {
+			if (skill.onCooldown) {
+				skill.onCooldown(self);
+			}
+			else {
+				self.sayL10n(l10n, 'COOLDOWN');
+			}
+			return true;
+		}
+	};
+
+	/**
+	 * Set a cooldown
+	 * @param string aff
+	 * @return Array|Object
+	 */
+	self.setCooldown = function (name)
+	{
+		var skill = Skills[self.getAttribute("class")][name];
+		self.addAffect('cooldown_'+name, {
+			duration: skill.cooldown,
+			deactivate: function () {
+				if (skill.offCooldown) {
+					skill.offCooldown(self);
+				}
+				else {
+					self.sayL10n(l10n, 'COOLDOWN_END', skill.name);
+				}
+			}
+		});
+	};
 
 	/**
 	 * Get currently applied affects
@@ -369,7 +422,16 @@ var Player = function(socket) {
 	 */
 	self.useSkill = function (skill/*, args... */)
 	{
+		if (self.isInCombat()){
+			var notCombatUsable = self.notCombatUsable(skill);
+			if ( notCombatUsable ) return notCombatUsable(self);
+		}
+
+        if (self.getCooldown(skill)) return true;
+
 		Skills[self.getAttribute('class')][skill].activate.apply(null, [].slice.call(arguments).slice(1));
+
+        self.setCooldown(skill);
 	};
 
 	self.init();

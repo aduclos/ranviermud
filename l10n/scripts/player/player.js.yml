@@ -20,3 +20,9 @@ EXPGAIN:
 NEWSKILL:
     en: "<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"
     es: "ES-<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"
+COOLDOWN:
+    en: "You can't use that skill yet."
+    es: "ES-You can't use that skill yet."
+COOLDOWN_END:
+    en: "You can use $[1] again."
+    es: "ES-You can use $[1] again."

@@ -1,0 +1,12 @@
+HIDE:
+    en: "Hide"
+    es: "?"
+HIDE_DESC:
+    en: "Hide from other players and NPCs"
+    es: "?"
+HIDE_COMBAT:
+    en: "You can't hide while fighting!"
+    es: "?"
+HIDE_ATTEMPT:
+    en: "You attempt to blend into the shadows."
+    es: "?"

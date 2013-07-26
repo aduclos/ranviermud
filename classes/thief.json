@@ -1,0 +1,41 @@
+exports.skills = {
+    hide: {
+        type: 'active',
+        level: 2,
+        name: "Hide",
+        description: "Hide from other players and NPCs",
+        cooldown: 6,
+        activate: function(player, args, rooms, npcs)
+        {
+
+            if (player.isInCombat()) {
+                player.say(L(player.getLocale(), 'thief', 'HIDE_COMBAT'));
+                return true;
+            }
+
+            if (player.getCooldown("hide")) return true;
+
+            /*if (player.getAffects('cooldown_tackle')) {
+                player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN'));
+                return true;
+            }*/
+
+            player.say(L(player.getLocale(), 'thief', 'HIDE_ATTEMPT'));
+
+            // Slap a cooldown on the player
+            /*
+            player.addAffect('cooldown_tackle', {
+                duration: 6,
+                deactivate: function () {
+                    player.say(L(player.getLocale(), 'thief', 'HIDE_COOLDOWN_END'));
+                }
+            });
+            */
+
+            //console.log(this);
+            player.setCooldown("hide");
+
+            return true;
+        }
+    }
+};

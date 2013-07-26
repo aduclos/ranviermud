@@ -380,14 +380,14 @@ var Events = {
 				});
 				break;
 			case 'class':
-				var classes = {w: '[W]arrior'};
+				var classes = {w: '[W]arrior', t: '[T]hief'};
 				arg.sayL10n(l10n, 'CLASS_SELECT');
 				for (var r in classes) {
 					arg.say(classes[r]);
 				}
 				arg.getSocket().once('data', function (cls) {
 					cls = cls.toString().trim().toLowerCase();
-					var classes = {w: "warrior"};
+					var classes = {w: "warrior", t: "thief"};
 					if (!(cls in classes)) {
 						arg.sayL10n(l10n,'INVALID_CLASS');
 						return repeat();

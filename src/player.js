@@ -43,6 +43,9 @@ var Player = function(socket) {
 	self.skills = {
 	};
 
+	self.tells = [];
+	self.told = [];
+
 	/**#@+
 	 * Mutators
 	 */

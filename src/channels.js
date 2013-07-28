@@ -38,8 +38,20 @@ exports.Channels = {
 			var text = args.substring(nameEnd);
 			var exists = players.some(function(p){ return p.getName() === target; });
 			if (exists){
-				players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>", function(p){return p.getName() === target; });
-				player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
+				var tell = "<red><bold>" + player.getName() + " told you: </bold>" + text + "</red>";
+				players.eachIf(function(p){
+					return p.getName() === target;
+				},function(p){
+					p.tells.push(tell);
+					p.tells.slice(0,30);
+					p.say(tell);
+				});
+				//players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>", function(p){return p.getName() === target; });
+				var told = "<bold><red>You told " + target + ": " + text + "</red></bold>";
+				player.told.push(told);
+				player.told.slice(0,30);
+				player.say(told);
+				//player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
 			}
 			else {
 				player.say("<bold><magenta>" + target + " is not logged in.</magenta></bold>", player);

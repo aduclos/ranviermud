@@ -38,17 +38,21 @@ exports.Channels = {
 			var text = args.substring(nameEnd);
 			var exists = players.some(function(p){ return p.getName() === target; });
 			if (exists){
-				var tell = "<red><bold>" + player.getName() + " told you: </bold>" + text + "</red>";
+				var date = new Date().toString().substring(0,24);
+				var datetell = "<red>[" + date + "] " + player.getName() + " told you: " + text + "</red>";
+				var tell = "<red>" + player.getName() + " told you: " + text + "</red>";
 				players.eachIf(function(p){
 					return p.getName() === target;
 				},function(p){
-					p.tells.push(tell);
+					p.tells.push(datetell);
 					p.tells.slice(0,30);
 					p.say(tell);
+					p.prompt();
 				});
 				//players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>", function(p){return p.getName() === target; });
-				var told = "<bold><red>You told " + target + ": " + text + "</red></bold>";
-				player.told.push(told);
+				var datetold = "<red>[" + date + "] You told " + target + ": " + text + "</red>";
+				var told = "<red>You told " + target + ": " + text + "</red>";
+				player.told.push(datetold);
 				player.told.slice(0,30);
 				player.say(told);
 				//player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
@@ -56,7 +60,8 @@ exports.Channels = {
 			else {
 				player.say("<bold><magenta>" + target + " is not logged in.</magenta></bold>", player);
 			}
-			players.eachIf(function(p){ return p.getName() === player || p.getName() === target; }, function (p) { p.prompt(); });
+			player.prompt();
+			//players.eachIf(function(p){ return p.getName() === player || p.getName() === target; }, function (p) { p.prompt(); });
 		}
 	},
 

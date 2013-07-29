@@ -82,7 +82,7 @@ var Player = function(socket) {
 	 */
 	self.getCondition = function () {
 		var condition = self.getName() + " is in perfect heath.";
-		if (self.hp < self.maxHp){
+		if (self.getAttribute("health") < self.getAttribute("max_health")){
 			condition = self.getName() + " is injured.";
 		}
 		return condition;

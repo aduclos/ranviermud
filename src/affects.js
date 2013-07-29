@@ -3,6 +3,27 @@
  */
 exports.Affects = {
 	/**
+	 * Generic hide
+	 */
+	hidden: function (config)
+	{
+		var hidden = config.target.getAttribute('isHidden');
+		return {
+			activate: function () {
+				if (!hidden){
+					config.target.setAttribute('isHidden', true);
+				}
+			},
+			deactivate : function () {
+				config.target.setAttribute('isHidden', false);
+				if (config.deactivate) {
+					config.deactivate();
+				}
+			},
+			duration: config.duration
+		}
+	},
+	/**
 	 * Generic slow
 	 */
 	slow: function (config)

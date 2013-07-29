@@ -16,13 +16,31 @@ exports.skills = {
         offCooldown: function(player){
             player.sayL10n(pl10n, 'COOLDOWN_END', "Test Replacement String");
         },
-        activate: function(player, args, rooms, npcs)
+        activate: function(player, args, rooms, npcs, players)
         {
-            //if (player.getCooldown("hide")) return true;
+            player.addAffect("hidden", Affects.hidden({
+                duration: 10,
+                magnitude: 1.5,
+                player: player,
+                target: player,
+                deactivate: function () {
+                    player.sayL10n(l10n, 'HIDE_END_SELF');
+                    players.eachAt(player.getLocation(),function(p){
+                        if (p.getName() !== player.getName()){
+                            p.sayL10n(l10n, 'HIDE_END_OTHERS', player.getName());
+                        }
+                    });
+                }
+            }));
 
             player.sayL10n(l10n, 'HIDE_ATTEMPT');
 
-            //player.setCooldown("hide");
+            player.sayL10n(l10n, 'HIDE_SUCCESS_SELF');
+            players.eachAt(player.getLocation(),function(p){
+                if (p.getName() !== player.getName()){
+                    p.sayL10n(l10n, 'HIDE_SUCCESS_OTHERS', player.getName());
+                }
+            });
 
             return true;
         }

@@ -252,7 +252,7 @@ var Events = {
 										Channels[command].use(args, player, players);
 									}
 								} else {
-									result = player.useSkill(command, player, args, rooms, npcs);
+									result = player.useSkill(command, player, args, rooms, npcs, players);
 								}
 							}
 						}

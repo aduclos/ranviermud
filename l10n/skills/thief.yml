@@ -10,3 +10,15 @@ HIDE_COMBAT:
 HIDE_ATTEMPT:
     en: "You attempt to blend into the shadows."
     es: "?"
+HIDE_SUCCESS_SELF:
+    en: "You blend into the shadows."
+    es: "?"
+HIDE_SUCCESS_OTHERS:
+    en: "$[1] blends into the shadows."
+    es: "?"
+HIDE_END_SELF:
+    en: "Your come back out of the shadows."
+    es: "?"
+HIDE_END_OTHERS:
+    en: "$[1] fades out of the shadows."
+    es: "?"

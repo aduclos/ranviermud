@@ -23,8 +23,14 @@ exports.command = function (rooms, items, players, npcs, Commands)
 			}
 
 			if (!thing) {
-				var isPlayer = true;
-				thing = CommandUtil.findPlayerInRoom(args, room, players, true);
+				//then a player (or self)
+				if (args === "self"){
+					thing = player;
+				}
+				else {
+					thing = CommandUtil.findPlayerInRoom(args, room, players, true);
+				}
+				var isPlayer = thing ? true : false;
 			}
 
 			if (!thing) {
@@ -33,6 +39,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 			}
 
 			player.say(thing.getDescription(player.getLocale()));
+
 			if (isPlayer){
 				var equipped = thing.getEquipped();
 				for (var i in equipped) {
@@ -40,7 +47,9 @@ exports.command = function (rooms, items, players, npcs, Commands)
 					player.say(sprintf("%-15s %s", "<" + i + ">", item.getShortDesc(thing.getLocale())));
 				}
 				player.say(thing.getCondition());
-				thing.sayL10n(l10n,"LOOK_AT_YOU",player.getName());
+				if (player !== thing){
+					thing.sayL10n(l10n,"LOOK_AT_YOU",player.getName());
+				}
 
 				players.broadcastAtIfL10n(player, function(p){
 					return p.getName() !== player.getName() && p.getName() !== thing.getName()
@@ -49,6 +58,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 				);
 
 			}
+
 			return;
 		}
 
@@ -68,7 +78,9 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		players.eachIf(function (p) {
 			return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
 		}, function (p) {
-			player.sayL10n(l10n, 'IN_ROOM', p.getName());
+			if (!p.getAffects("hidden")){
+				player.sayL10n(l10n, 'IN_ROOM', p.getName());
+			}
 		});
 
 		// show all the items in the rom

@@ -19,6 +19,31 @@ var CommandUtil = {
 	},
 
 	/**
+	 * Find a player in a room
+	 * @param string lookString
+	 * @param Room   room
+	 * @param Player player
+	 * @param boolean hydrade Whether to return the id or a full object
+	 * @return string UUID of the item
+	 */
+	findPlayerInRoom : function (lookString, room, players, hydrate)
+	{
+		hydrate = hydrate || false;
+		/*var thing = CommandUtil.parseDot(lookString, room.getItems(), function (item) {
+			return items.get(item).hasKeyword(this.keyword, player.getLocale());
+		});*/
+		var thing = false;
+		players.eachAt(room.location,function(p){
+			if (p.getName() === lookString){
+				thing = p;
+			}
+		});
+
+		//return thing ? (hydrate ? items.get(thing) : thing) : false;
+		return thing;
+	},
+
+	/**
 	 * Find an npc in a room based on the syntax
 	 *   things like: get 2.thing or look 6.thing or look thing
 	 * @param string lookString

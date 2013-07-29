@@ -1,6 +1,7 @@
 var CommandUtil = require('../src/command_util').CommandUtil;
 var l10n_file = __dirname + '/../l10n/commands/look.yml';
 var l10n = new require('localize')(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
+var sprintf = require('sprintf').sprintf;
 exports.command = function (rooms, items, players, npcs, Commands)
 {
 	return function (args, player)
@@ -21,7 +22,10 @@ exports.command = function (rooms, items, players, npcs, Commands)
 				thing = CommandUtil.findNpcInRoom(npcs, args, room, player, true);
 			}
 
-			// TODO: look at players
+			if (!thing) {
+				var isPlayer = true;
+				thing = CommandUtil.findPlayerInRoom(args, room, players, true);
+			}
 
 			if (!thing) {
 				player.sayL10n(l10n, 'ITEM_NOT_FOUND');
@@ -29,6 +33,22 @@ exports.command = function (rooms, items, players, npcs, Commands)
 			}
 
 			player.say(thing.getDescription(player.getLocale()));
+			if (isPlayer){
+				var equipped = thing.getEquipped();
+				for (var i in equipped) {
+					var item = items.get(equipped[i]);
+					player.say(sprintf("%-15s %s", "<" + i + ">", item.getShortDesc(thing.getLocale())));
+				}
+				player.say(thing.getCondition());
+				thing.sayL10n(l10n,"LOOK_AT_YOU",player.getName());
+
+				players.broadcastAtIfL10n(player, function(p){
+					return p.getName() !== player.getName() && p.getName() !== thing.getName()
+				}, l10n,
+					'LOOK_AT_PLAYER', player.getName(), thing.getName()
+				);
+
+			}
 			return;
 		}
 

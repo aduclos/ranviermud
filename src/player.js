@@ -14,6 +14,7 @@ var l10n 			 = require('./l10n')(l10n_file);
 var Player = function(socket) {
 	var self = this;
 	self.name     = '';
+	self.descriotion = '';
 	self.location = null;
 	self.locale   = null;
 	self.prompt_string = '%health/%max_healthHP>';
@@ -74,6 +75,27 @@ var Player = function(socket) {
 	self.setAttribute    = function (attr, val) { self.attributes[attr] = val; };
 	self.addSkill        = function (name, skill) { self.skills[name] = skill; };
 	/**#@-*/
+
+	/**
+	 * Get a player's physical condition
+	 * @return string
+	 */
+	self.getCondition = function () {
+		var condition = self.getName() + " is in perfect heath.";
+		if (self.hp < self.maxHp){
+			condition = self.getName() + " is injured.";
+		}
+		return condition;
+	};
+
+	/**
+	 * Get a player's description
+	 * @return string
+	 */
+	self.getDescription = function ()
+	{
+		return self.description;
+	};
 
 	/**
 	 * Is skill usable in combat?
@@ -349,6 +371,8 @@ var Player = function(socket) {
 				self.useSkill(skill, self);
 			}
 		}
+		self.tells = data.tells || [];
+		self.told = data.told || [];
 
 	};
 
@@ -401,6 +425,7 @@ var Player = function(socket) {
 
 		return JSON.stringify({
 			name: self.name,
+			description: self.description,
 			location: self.location,
 			locale: self.locale,
 			prompt_string: self.prompt_string,
@@ -409,7 +434,9 @@ var Player = function(socket) {
 			inventory: inv,
 			equipment: self.equipment,
 			attributes: self.attributes,
-			skills: self.skills
+			skills: self.skills,
+			tells: self.tells,
+			told: self.told
 		});
 	};
 

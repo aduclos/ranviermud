@@ -7,6 +7,12 @@ LIMBO:
 IN_ROOM:
     en: "$[1] is here."
     es: "ES-$[1] is here."
+LOOK_AT_PLAYER:
+    en: "$[1] looks at $[2]."
+    es: "ES-$[1] looks at $[2]."
+LOOK_AT_YOU:
+    en: "$[1] looks at you."
+    es: "ES-$[1] looks at you."
 EXITS:
     en: "Exits"
     es: "ES-Exits"

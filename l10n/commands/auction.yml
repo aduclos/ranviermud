@@ -1,9 +1,0 @@
-AUCTION:
-    en: "<bold><magenta>[auction] $[1] is auctioning $[2]. Starting bid is $[3] coins.</magenta></bold>"
-    es: "?"
-AUCTION_ARGS:
-    en: "Auctions require an item and price."
-    es: "?"
-AUCTION_FAIL:
-    en: "I don't know what you want to auction! $[1] for $[2] doesn't make sense to me!"
-    es: "?"

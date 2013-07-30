@@ -150,6 +150,7 @@ var Item = function (config)
 	self.equipped = false;
 	self.script = '';
 	self.attributes = {};
+	self.affects = {};
 
 	self.init = function (config)
 	{
@@ -211,6 +212,19 @@ var Item = function (config)
 		return typeof self.short_description === 'string' ?
 			self.short_description :
 			(locale in self.short_description ? self.short_description[locale] : 'UNTRANSLATED - Contact an admin');
+	};
+
+	/**
+	 * Get currently applied affects
+	 * @param string aff
+	 * @return Array|Object
+	 */
+	self.getAffects = function (aff)
+	{
+		if (aff) {
+			return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] : false;
+		}
+		return self.affects;
 	};
 
 	/**

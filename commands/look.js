@@ -81,7 +81,6 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		players.eachIf(function (p) {
 			return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
 		}, function (p) {
-			//if (!p.getAffects("hidden")){
 			if (player.canSeeTarget(p)){
 				player.sayL10n(l10n, 'IN_ROOM', p.getName());
 			}
@@ -89,26 +88,31 @@ exports.command = function (rooms, items, players, npcs, Commands)
 
 		// show all the items in the rom
 		room.getItems().forEach(function (id) {
-			player.say('<magenta>' + items.get(id).getShortDesc(player.getLocale()) + '</magenta>');
+			var item = items.get(id);
+			if (player.canSeeTarget(item)){
+				player.say('<magenta>' + item.getShortDesc(player.getLocale()) + '</magenta>');
+			}
 		});
 
 		// show all npcs in the room
 		room.getNpcs().forEach(function (id) {
 			var npc = npcs.get(id);
 			if (npc) {
-				var color = 'cyan';
-				switch (true) {
-					case ((npc.getAttribute('level') - player.getAttribute('level')) > 3):
-						color = 'red';
-						break;
-					case ((npc.getAttribute('level') - player.getAttribute('level')) >= 1):
-						color = 'yellow';
-						break;
-					default:
-						color = 'green'
-						break;
+				if (player.canSeeTarget(npc)){
+					var color = 'cyan';
+					switch (true) {
+						case ((npc.getAttribute('level') - player.getAttribute('level')) > 3):
+							color = 'red';
+							break;
+						case ((npc.getAttribute('level') - player.getAttribute('level')) >= 1):
+							color = 'yellow';
+							break;
+						default:
+							color = 'green'
+							break;
+					}
+					player.say('<'+color+'>' + npcs.get(id).getShortDesc(player.getLocale()) + '</'+color+'>');
 				}
-				player.say('<'+color+'>' + npcs.get(id).getShortDesc(player.getLocale()) + '</'+color+'>');
 			}
 		});
 

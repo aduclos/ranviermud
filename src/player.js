@@ -82,17 +82,19 @@ var Player = function(socket) {
 	 * @return boolean
 	 */
 	self.canSeeTarget = function (target) {
-		if (self.isBlind) {
-			console.log("blind");
+		if (self.getAffects("true_sight")) return true;
+		if (self.getAffects("blind")){
 			return false;
 		}
 		if (target.getAffects("hidden")){
-			console.log("hidden");
-			return false;
+			if (!self.getAffects("detect_hidden")){
+				return false;
+			}
 		}
 		if (target.getAffects("invisible")){
-			console.log("invsible");
-			return false;
+			if (!self.getAffects("detect_invisible")){
+				return false;
+			}
 		}
 		return true;
 	};

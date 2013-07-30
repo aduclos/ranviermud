@@ -26,11 +26,14 @@ exports.command = function (rooms, items, players, npcs, Commands)
 				//then a player (or self)
 				if (args === "self"){
 					thing = player;
+					var isPlayer = true;
 				}
 				else {
 					thing = CommandUtil.findPlayerInRoom(args, room, players, true);
+					var isPlayer = player.canSeeTarget(thing);
+					thing = isPlayer ? thing : false;
 				}
-				var isPlayer = thing ? true : false;
+				//var isPlayer = thing ? true : false;
 			}
 
 			if (!thing) {
@@ -78,7 +81,8 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		players.eachIf(function (p) {
 			return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
 		}, function (p) {
-			if (!p.getAffects("hidden")){
+			//if (!p.getAffects("hidden")){
+			if (player.canSeeTarget(p)){
 				player.sayL10n(l10n, 'IN_ROOM', p.getName());
 			}
 		});

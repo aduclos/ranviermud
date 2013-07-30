@@ -1,5 +1,5 @@
-var l10n_file = __dirname + '/../l10n/commands/auction.yml';
-var l10n = require('../src/l10n')(l10n_file);
+var tellL10n = require('../src/l10n')(__dirname + '/../l10n/channels/tell.yml');
+var auctionL10n = require('../src/l10n')(__dirname + '/../l10n/channels/auction.yml');
 var CommandUtil = require('../src/command_util').CommandUtil;
 exports.Channels = {
 	say: {
@@ -38,30 +38,30 @@ exports.Channels = {
 			var text = args.substring(nameEnd);
 			var exists = players.some(function(p){ return p.getName() === target; });
 			if (exists){
-				var date = new Date().toString().substring(0,24);
-				var datetell = "<red>[" + date + "] " + player.getName() + " told you: " + text + "</red>";
-				var tell = "<red>" + player.getName() + " told you: " + text + "</red>";
 				players.eachIf(function(p){
 					return p.getName() === target;
 				},function(p){
-					p.tells.push(datetell);
-					p.tells.slice(0,30);
-					p.say(tell);
-					p.prompt();
+					var playerSeesTarget = player.canSeeTarget(p);
+					if (playerSeesTarget){
+						var date = new Date().toString().substring(0,24);
+
+						//Echo to target
+						var targetSeesPlayer = p.canSeeTarget(player);
+						var pName = targetSeesPlayer ? player.getName() : "Someone";
+						player.getTell(tellL10n, "TELL_LIST", date, pName, text);
+
+						//Echo to player
+						var targetName = playerSeesTarget ? target : "Someone";
+						player.sendTell(tellL10n, "TOLD_LIST", date, targetName, text);
+					}
+					else {
+						player.sayL10n(tellL10n,"TELL_FAIL", target);
+					}
 				});
-				//players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>", function(p){return p.getName() === target; });
-				var datetold = "<red>[" + date + "] You told " + target + ": " + text + "</red>";
-				var told = "<red>You told " + target + ": " + text + "</red>";
-				player.told.push(datetold);
-				player.told.slice(0,30);
-				player.say(told);
-				//player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
 			}
 			else {
-				player.say("<bold><magenta>" + target + " is not logged in.</magenta></bold>", player);
+				player.sayL10n(tellL10n,"TELL_FAIL", target);
 			}
-			player.prompt();
-			//players.eachIf(function(p){ return p.getName() === player || p.getName() === target; }, function (p) { p.prompt(); });
 		}
 	},
 
@@ -72,7 +72,7 @@ exports.Channels = {
 		{
 			args = args.split(" ");
 			if (args.length < 2){
-				player.sayL10n(l10n,"AUCTION_ARGS");
+				player.sayL10n(auctionL10n,"AUCTION_ARGS");
 				return;
 			}
 			else {
@@ -86,12 +86,12 @@ exports.Channels = {
 					price = args[0];
 				}
 				else {
-					player.sayL10n(l10n,"AUCTION_FAIL", item, price);
+					player.sayL10n(auctionL10n,"AUCTION_FAIL", item, price);
 					return;
 				}
 			}
 			item = CommandUtil.findItemInInventory(item, player, true);
-			players.broadcastL10n(l10n, "AUCTION", player.getName(), item.getShortDesc(player.getLocale()), price);
+			players.broadcastL10n(auctionL10n, "AUCTION", player.getName(), item.getShortDesc(player.getLocale()), price);
 			players.eachExcept(player, function (p) { p.prompt(); });
 		}
 	},

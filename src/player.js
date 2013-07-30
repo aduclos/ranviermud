@@ -77,6 +77,27 @@ var Player = function(socket) {
 	/**#@-*/
 
 	/**
+	 * Can a player see a target?
+	 * @param object item/player/mob
+	 * @return boolean
+	 */
+	self.canSeeTarget = function (target) {
+		if (self.isBlind) {
+			console.log("blind");
+			return false;
+		}
+		if (target.getAffects("hidden")){
+			console.log("hidden");
+			return false;
+		}
+		if (target.getAffects("invisible")){
+			console.log("invsible");
+			return false;
+		}
+		return true;
+	};
+
+	/**
 	 * Get a player's physical condition
 	 * @return string
 	 */
@@ -304,6 +325,38 @@ var Player = function(socket) {
 		}
 
 		self.say(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
+		if (locale) l10n.setLocale(locale);
+	};
+
+	/**
+	 * receive a tell and write it into tells array
+	 */
+	self.getTell = function (l10n)
+	{
+		var locale = l10n.locale;
+		if (self.getLocale()) {
+			l10n.setLocale(self.getLocale());
+		}
+
+		self.tells.push(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
+		self.tells = self.tells.slice(self.tells.length-30,self.tells.length);
+		self.sayL10n(l10n,"TELL_GET", arguments[3], arguments[4]);
+		if (locale) l10n.setLocale(locale);
+	};
+
+	/**
+	 * send a tell and write it into told array
+	 */
+	self.sendTell = function (l10n)
+	{
+		var locale = l10n.locale;
+		if (self.getLocale()) {
+			l10n.setLocale(self.getLocale());
+		}
+
+		self.told.push(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
+		self.told = self.told.slice(self.told.length-30,self.told.length);
+		self.sayL10n(l10n,"TELL_SEND", arguments[3], arguments[4]);
 		if (locale) l10n.setLocale(locale);
 	};
 

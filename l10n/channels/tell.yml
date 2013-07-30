@@ -1,0 +1,15 @@
+TELL_SEND:
+    en: "<red>You told $[1]: $[2]</red>"
+    es: "?"
+TELL_GET:
+    en: "<red>$[1] told you: $[2]</red>"
+    es: "?"
+TELL_LIST:
+    en: "<red>[$[1]] $[2] told you: $[3]</red>"
+    es: "?"
+TOLD_LIST:
+    en: "<red>[$[1]] You told $[2]: $[3]</red>"
+    es: "?"
+TELL_FAIL:
+    en: "<red>$[1] is not logged in.</red>"
+    es: "?"

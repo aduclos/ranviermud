@@ -98,7 +98,7 @@ var PlayerManager = function ()
 	 */
 	self.eachAt = function (location, callback)
 	{
-		self.eachIf(function (p) { console.log(p.getLocation());console.log(location); return p.getLocation() === location; }, callback);
+		self.eachIf(function (p) { return p.getLocation() === location; }, callback);
 	};
 
 

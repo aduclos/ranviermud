@@ -1,6 +1,9 @@
+ENTER:
+    en: "$[1] $[2] from $[3]."
+    es: "ES-$[1] $[2] from $[3]."
 LEAVE:
-    en: "$[1] leaves."
-    es: "ES-$[1] leaves."
+    en: "$[1] $[2] $[3]."
+    es: "ES-$[1] $[2] $[3]."
 AMBIG_EXIT:
     en: "Which one? Be more specific."
     es: "ES-Which one? Be more specific."

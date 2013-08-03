@@ -147,19 +147,52 @@ function move (exit, player)
 	}
 
 	// Send the room leave message
-	players.broadcastIf(exit.leave_message || L('LEAVE', player.getName()), function (p) {
-		return p.getLocation() === player.getLocation && p != player;
+	//players.broadcastIf(exit.leave_message ? exit.leave_message["en"] : L('LEAVE', player.getName(), exit.direction), function (p) {
+		//return p.getLocation() === player.getLocation() && p != player;
+	//});
+	players.eachIf(function (p) {
+		return p.getLocation() === player.getLocation() && p != player;
+	},function(p){
+		if (p.canSeeTargetMove(player)){
+			if (exit.leave_message){
+				//p.say(exit.enter_message[p.getLocale()]);
+				p.sayL10n(l10nHelper({KEY:exit.leave_message}), "KEY", player.getName());
+			}
+			else {
+				var loc = l10nHelper(__dirname + '/../l10n/commands.yml');
+				p.sayL10n(loc, 'LEAVE', player.getName(), player.getMoveMode() || "leaves", room.getExitDescription(exit));
+			}
+		}
 	});
 
-	players.eachExcept(player, function (p) {
+	/*players.eachExcept(player, function (p) {
 		if (p.getLocation() === player.getLocation()) {
 			p.prompt();
 		}
-	});
+	})*/
 
 	player.setLocation(exit.location);
 	// Force a re-look of the room
 	Commands.player_commands.look(null, player);
+
+	// Send the room enter message
+	//players.broadcastIf(exit.enter_message ? exit.enter_message["en"] : L('ENTER', player.getName(), room.reverseDirection(exit)), function (p) {
+		//return p.getLocation() === player.getLocation() && p != player;
+	//});
+	players.eachIf(function (p) {
+		return p.getLocation() === player.getLocation() && p != player;
+	},function(p){
+		if (p.canSeeTargetMove(player)){
+			if (exit.enter_message){
+				//p.say(exit.enter_message[p.getLocale()]);
+				p.sayL10n(l10nHelper({KEY:exit.enter_message}), "KEY", player.getName());
+			}
+			else {
+				var loc = l10nHelper(__dirname + '/../l10n/commands.yml');
+				p.sayL10n(loc, 'ENTER', player.getName(), player.getMoveMode() || "enters" , room.getReverseExitDescription(exit));
+			}
+		}
+	});
 
 	// Trigger the playerEnter event
 	// See example in scripts/npcs/1.js

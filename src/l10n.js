@@ -6,5 +6,11 @@ var Localize = require('localize');
  */
 module.exports = function (l10n_file)
 {
-	return new Localize(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
+    if (typeof l10n_file == "string"){
+    	return new Localize(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
+    }
+    else {
+        console.log("yep")
+        return new Localize(l10n_file, undefined, 'zz');
+    }
 };

@@ -179,6 +179,36 @@ var Room = function (config)
 	self.getNpcs = function () { return self.npcs; };
 
 	/**
+	 * Get the reverse direction of an exit.
+	 * @param string exit
+	 * @return string
+	 */
+	self.getExitDescription = function (exit)
+	{
+		var desc = exit.direction;
+		if (exit.custom_description) desc.custom_description;
+		return desc;
+	};
+
+	/**
+	 * Get the reverse direction of an exit.
+	 * @param string exit
+	 * @return string
+	 */
+	self.getReverseExitDescription = function (exit)
+	{
+		var desc = exit.direction;
+		if (exit.reverse_description) desc = exit.reverse_description;
+		else if (exit === "west") desc = "the east";
+		else if (exit === "east") desc = "the west";
+		else if (exit === "north") desc = "the south";
+		else if (exit === "south") desc = "the north";
+		else if (exit === "up") desc = "above";
+		else if (exit === "down") desc = "below";
+		return desc;
+	};
+
+	/**
 	 * Get the description, localized if possible
 	 * @param string locale
 	 * @return string

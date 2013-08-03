@@ -100,6 +100,45 @@ var Player = function(socket) {
 	};
 
 	/**
+	 * Can a player see a target move?
+	 * @param object item/player/mob
+	 * @return boolean
+	 */
+	self.canSeeTargetMove = function (target) {
+		if (self.getAffects("true_sight")) return true;
+		if (self.getAffects("blind")){
+			return false;
+		}
+		if (target.getAffects("sneak")){
+			if (!self.getAffects("detect_hidden")){
+				return false;
+			}
+		}
+		return true;
+	};
+
+	/**
+	 * Can a player see a target move?
+	 * @param object item/player/mob
+	 * @return boolean
+	 */
+	self.getMoveMode = function (target) {
+		if (self.getAffects("fly")) {
+			return "flies";
+		}
+		if (self.getAffects("hidden")){
+			return "sneaks";
+		}
+		if (self.getAffects("swimming")){
+			return "swims";
+		}
+		if (self.getAffects("mounted")){
+			return "rides";
+		}
+		return false;
+	};
+
+	/**
 	 * Get a player's physical condition
 	 * @return string
 	 */

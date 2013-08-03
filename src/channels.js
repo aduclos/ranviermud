@@ -48,7 +48,7 @@ exports.Channels = {
 						//Echo to target
 						var targetSeesPlayer = p.canSeeTarget(player);
 						var pName = targetSeesPlayer ? player.getName() : "Someone";
-						player.getTell(tellL10n, "TELL_LIST", date, pName, text);
+						p.getTell(tellL10n, "TELL_LIST", date, pName, text);
 
 						//Echo to player
 						var targetName = playerSeesTarget ? target : "Someone";
